@@ -125,6 +125,8 @@ let addPoints = (params) => {
   }
   if(distoryBox.length!==0){
 
+    clearBlock(pointsList)
+
     for(const value of distoryBox){
       for(const secValue of pointsList){
         let number  =Number(value)
@@ -134,17 +136,26 @@ let addPoints = (params) => {
       }
     }
 
-    pointsList.forEach((item,index,arr) => {
-    
-        if(item[1]<number){
-          let newValue = [secValue[0],secValue[1]+1]
-          pointsList.delete(secValue)
-          pointsList.add(newValue)
-          console.log(pointsList,"seasdasd");
-        }
-      
+    let newPointList = new Set()
+
+    pointsList.forEach ((item) => {
+   
+      let increaseNum = distoryBox.length
+      let check = distoryBox.find((el) => {
+        if(item[1]<Number(el)){
+          return true
+        }      
+      }) 
+      if(check){
+        item = [item[0],item[1]+increaseNum]
+        newPointList.add(item)
+      }else{
+        newPointList.add(item)
+      }
     })
-    console.log(pointsList,"清除后的格子");
+
+    pointsList = newPointList
+    renderBlock(pointsList)
   }
 }
 
@@ -194,7 +205,6 @@ let checkLeft = (nextPoints, minX) => {
 }
 
 let checkDown = (nextPoints, maxY) => {
-
   if (maxY > 17) {
     return false
   }
@@ -387,7 +397,7 @@ onMounted(() => {
 
 let getBoxShape = () => {
   let index = String(Math.floor(Math.random(0, 1) * 10 * 0.5))
-  return box_shape["0"]
+  return box_shape[index]
 
 }
 
